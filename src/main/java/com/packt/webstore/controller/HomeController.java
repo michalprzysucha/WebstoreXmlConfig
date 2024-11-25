@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class HomeController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String welcome(Model model) {
-        model.addAttribute("greeting", "Witaj w sklepie internetowym HALOOOO!");
+        model.addAttribute("greeting", "Witaj w sklepie internetowym!");
         model.addAttribute("tagline", "Wyjątkowym i jedynym sklepie internetowym");
 
         return "welcome";

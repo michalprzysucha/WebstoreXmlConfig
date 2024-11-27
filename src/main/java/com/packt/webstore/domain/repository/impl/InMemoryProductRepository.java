@@ -5,8 +5,8 @@ import com.packt.webstore.domain.repository.ProductRepository;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryProductRepository implements ProductRepository {
@@ -14,7 +14,7 @@ public class InMemoryProductRepository implements ProductRepository {
 
     public InMemoryProductRepository() {
         Product iphone = new Product("P1234", "iPhone 5s", new BigDecimal(500));
-        iphone.setDescription("Apple iPhone 5s, smartfon z 4-calowym wyświetlaczem o rozdzielczości 640x1136 oraz" +
+        iphone.setDescription("Apple iPhone 5s, smartfon z 4-calowym wyświetlaczem o rozdzielczości 640x1136 oraz " +
                 "8-megapikselowym aparatem");
         iphone.setCategory("Smart Phone");
         iphone.setManufacturer("Apple");
@@ -56,5 +56,35 @@ public class InMemoryProductRepository implements ProductRepository {
             throw new IllegalArgumentException("Brak produktu o wskazanym id: " + productId);
         }
         return productById;
+    }
+
+    @Override
+    public List<Product> getProductsByCategory(String category) {
+        return listOfProducts.stream()
+                .filter(p -> p.getCategory().equalsIgnoreCase(category))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @Override
+    public Set<Product> getProductsByFilter(Map<String, List<String>> filterParams) {
+        Set<Product> productByBrand = new HashSet<>();
+        Set<Product> productsByCategory = new HashSet<>();
+        Set<String> criterias = filterParams.keySet();
+        if(criterias.contains("brand")) {
+            for(String brandName: filterParams.get("brand")) {
+                for(Product product: listOfProducts) {
+                    if(product.getManufacturer().equalsIgnoreCase(brandName)) {
+                        productByBrand.add(product);
+                    }
+                }
+            }
+        }
+        if(criterias.contains("category")) {
+            for(String category: filterParams.get("category")) {
+                productsByCategory.addAll(getProductsByCategory(category));
+            }
+        }
+        productsByCategory.retainAll(productByBrand);
+        return productsByCategory;
     }
 }

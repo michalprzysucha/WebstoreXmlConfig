@@ -47,12 +47,12 @@ public class InMemoryProductRepository implements ProductRepository {
     public Product getProductById(String productId) {
         Product productById = null;
         for (Product product : listOfProducts) {
-            if(product != null && product.getProductId() != null && product.getProductId().equals(productId)) {
+            if (product != null && product.getProductId() != null && product.getProductId().equals(productId)) {
                 productById = product;
                 break;
             }
         }
-        if(productById == null) {
+        if (productById == null) {
             throw new IllegalArgumentException("Brak produktu o wskazanym id: " + productId);
         }
         return productById;
@@ -70,21 +70,47 @@ public class InMemoryProductRepository implements ProductRepository {
         Set<Product> productByBrand = new HashSet<>();
         Set<Product> productsByCategory = new HashSet<>();
         Set<String> criterias = filterParams.keySet();
-        if(criterias.contains("brand")) {
-            for(String brandName: filterParams.get("brand")) {
-                for(Product product: listOfProducts) {
-                    if(product.getManufacturer().equalsIgnoreCase(brandName)) {
+        if (criterias.contains("brand")) {
+            for (String brandName : filterParams.get("brand")) {
+                for (Product product : listOfProducts) {
+                    if (product.getManufacturer().equalsIgnoreCase(brandName)) {
                         productByBrand.add(product);
                     }
                 }
             }
         }
-        if(criterias.contains("category")) {
-            for(String category: filterParams.get("category")) {
+        if (criterias.contains("category")) {
+            for (String category : filterParams.get("category")) {
                 productsByCategory.addAll(getProductsByCategory(category));
             }
         }
-        productsByCategory.retainAll(productByBrand);
+        if (criterias.contains("low")) {
+            BigDecimal low = new BigDecimal(filterParams.get("low").getFirst());
+            productsByCategory.addAll(listOfProducts.stream()
+                    .filter(p -> low.compareTo(p.getUnitPrice()) <= 0)
+                    .toList());
+            if(criterias.contains("high")) {
+                BigDecimal high = new BigDecimal(filterParams.get("high").getFirst());
+                productsByCategory.retainAll(listOfProducts.stream()
+                        .filter(p -> high.compareTo(p.getUnitPrice()) >= 0)
+                        .toList());
+            }
+        }
+        if(criterias.contains("brand")) {
+            productsByCategory.retainAll(productByBrand);
+        }
         return productsByCategory;
+    }
+
+    @Override
+    public List<Product> getProductsByManufacturer(String manufacturer) {
+        return listOfProducts.stream()
+                .filter(p -> p.getManufacturer().equalsIgnoreCase(manufacturer))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @Override
+    public void addProduct(Product product) {
+        listOfProducts.add(product);
     }
 }

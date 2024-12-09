@@ -1,8 +1,14 @@
 package com.packt.webstore.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@XmlRootElement
 public class Product {
     private String productId;
     private String name;
@@ -14,6 +20,10 @@ public class Product {
     private long unitsInOrder;
     private boolean discontinued;
     private String condition;
+    @JsonIgnore
+    private MultipartFile productImage;
+    @JsonIgnore
+    private MultipartFile manual;
 
     public Product() {
         super();
@@ -23,6 +33,24 @@ public class Product {
         this.unitPrice = unitPrice;
         this.name = name;
         this.productId = productId;
+    }
+
+    @XmlTransient
+    public MultipartFile getManual() {
+        return manual;
+    }
+
+    public void setManual(MultipartFile manual) {
+        this.manual = manual;
+    }
+
+    @XmlTransient
+    public MultipartFile getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(MultipartFile productImage) {
+        this.productImage = productImage;
     }
 
     public String getProductId() {

@@ -14,6 +14,9 @@
             <param-value>WEB-INF/spring/webcontext/DispatcherServlet-context.xml</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
+        <multipart-config>
+            <max-file-size>10240000</max-file-size>
+        </multipart-config>
     </servlet>
 
     <servlet-mapping>

@@ -2,6 +2,7 @@ package com.packt.webstore.controller;
 
 import com.packt.webstore.domain.Product;
 import com.packt.webstore.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,9 +10,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -88,11 +92,26 @@ public class ProductController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String processAddNewProductForm(@ModelAttribute("newProduct") Product productToBeAdded,
-                                           BindingResult result) {
+                                           BindingResult result, HttpServletRequest request) {
         String[] suppressedFields = result.getSuppressedFields();
         if (suppressedFields.length > 0) {
             throw new RuntimeException("Próba wiązania niedozwolonych pól: " +
                     StringUtils.arrayToCommaDelimitedString(suppressedFields));
+        }
+        MultipartFile productImage = productToBeAdded.getProductImage();
+        MultipartFile manual = productToBeAdded.getManual();
+        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
+        if (productImage != null && !productImage.isEmpty()) {
+            try{
+                Files.createDirectories(Paths.get(rootDirectory, "WEB-INF", "resources", "images"));
+                Files.createDirectories(Paths.get(rootDirectory, "WEB-INF", "resources", "pdf"));
+                productImage.transferTo(new File(rootDirectory +
+                        "WEB-INF\\resources\\images\\" + productToBeAdded.getProductId() + ".png"));
+                manual.transferTo(new File(rootDirectory +
+                        "WEB-INF\\resources\\pdf\\" + productToBeAdded.getProductId() + ".pdf"));
+            } catch (IOException e) {
+                throw new RuntimeException("Niepowodzenie podczas próby zapisu pliku produktu", e);
+            }
         }
         productService.addProduct(productToBeAdded);
         return "redirect:/products";

@@ -23,6 +23,9 @@
                 <h1>Produkty</h1>
                 <p>Dodaj produkty</p>
             </div>
+            <div class="pull-right" style="padding-right:50px">
+                <a href="?language=pl">polski</a>|<a href="?language=nl">holenderski</a>
+            </div>
         </div>
     </section>
     <section class="container">

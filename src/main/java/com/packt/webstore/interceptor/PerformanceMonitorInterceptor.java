@@ -9,11 +9,13 @@ import org.springframework.web.servlet.ModelAndView;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PerformanceMonitorInterceptor implements HandlerInterceptor {
     ThreadLocal<StopWatch> stopWatchLocal = new ThreadLocal<>();
-    Logger logger = Logger.getLogger(this.getClass().getName());
+    Logger logger = LogManager.getLogger(this.getClass());
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

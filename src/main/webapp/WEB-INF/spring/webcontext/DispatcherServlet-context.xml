@@ -13,11 +13,17 @@
 
     <context:component-scan base-package="com.packt.webstore"/>
     <mvc:resources mapping="/resources/**" location="WEB-INF/resources/" />
-    <mvc:annotation-driven enable-matrix-variables="true"/>
+    <mvc:annotation-driven enable-matrix-variables="true" validator="validator"/>
     <mvc:interceptors>
         <bean class="com.packt.webstore.interceptor.PerformanceMonitorInterceptor" />
         <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
             <property name="paramName" value="language" />
+        </bean>
+        <bean class="com.packt.webstore.interceptor.AuditingInterceptor" />
+        <bean class="com.packt.webstore.interceptor.PromoCodeInterceptor" >
+            <property name="promoCode" value="OF3RTA" />
+            <property name="errorRedirect" value="invalidPromoCode" />
+            <property name="offerRedirect" value="products" />
         </bean>
     </mvc:interceptors>
 
@@ -74,5 +80,10 @@
 <!--    Default locale settings -->
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
         <property name="defaultLocale" value="pl" />
+    </bean>
+
+<!--    Validator bean configuration -->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="validationMessageSource" ref="messageSource" />
     </bean>
 </beans>

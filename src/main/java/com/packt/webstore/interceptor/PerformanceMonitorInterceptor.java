@@ -22,15 +22,15 @@ public class PerformanceMonitorInterceptor implements HandlerInterceptor {
         StopWatch stopWatch = new StopWatch(handler.toString());
         stopWatch.start(handler.toString());
         stopWatchLocal.set(stopWatch);
-        logger.info("Przetwarzanie żądania do ścieżki: " + getURLPath(request));
-        logger.info("Przetwarzanie żądania rozpoczęto o: " + getCurrentTime());
+        logger.info("Przetwarzanie żądania do ścieżki: {}", getURLPath(request));
+        logger.info("Przetwarzanie żądania rozpoczęto o: {}", getCurrentTime());
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                            ModelAndView modelAndView) throws Exception {
-        logger.info("Przetwarzanie żądania zakończono o:" + getCurrentTime());
+        logger.info("Przetwarzanie żądania zakończono o:{}", getCurrentTime());
     }
 
     @Override
@@ -38,7 +38,7 @@ public class PerformanceMonitorInterceptor implements HandlerInterceptor {
                                 Object handler, Exception ex) throws Exception {
         StopWatch stopWatch = stopWatchLocal.get();
         stopWatch.stop();
-        logger.info("Łączny czas przetwarzania żądania: " + stopWatch.getTotalTimeMillis() + " ms");
+        logger.info("Łączny czas przetwarzania żądania: {} ms", stopWatch.getTotalTimeMillis());
         stopWatchLocal.remove();
         logger.info("===========================================================================================");
     }

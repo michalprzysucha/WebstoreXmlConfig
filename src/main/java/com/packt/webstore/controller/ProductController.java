@@ -5,6 +5,7 @@ import com.packt.webstore.exception.NoProductsFoundUnderCategoryException;
 import com.packt.webstore.exception.ProductNotFoundException;
 import com.packt.webstore.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -98,8 +99,11 @@ public class ProductController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String processAddNewProductForm(@ModelAttribute("newProduct") Product productToBeAdded,
+    public String processAddNewProductForm(@ModelAttribute("newProduct") @Valid Product productToBeAdded,
                                            BindingResult result, HttpServletRequest request) {
+        if (result.hasErrors()) {
+            return "addProduct";
+        }
         String[] suppressedFields = result.getSuppressedFields();
         if (suppressedFields.length > 0) {
             throw new RuntimeException("Próba wiązania niedozwolonych pól: " +
@@ -122,6 +126,11 @@ public class ProductController {
         }
         productService.addProduct(productToBeAdded);
         return "redirect:/products";
+    }
+
+    @RequestMapping("/invalidPromoCode")
+    public String invalidPromoCode(){
+        return "invalidPromoCode";
     }
 
     @InitBinder

@@ -82,8 +82,23 @@
         <property name="defaultLocale" value="pl" />
     </bean>
 
-<!--    Validator bean configuration -->
+<!--    Bean validator configuration -->
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
         <property name="validationMessageSource" ref="messageSource" />
+    </bean>
+
+<!--    Product bean validator - combination of bean and spring validation -->
+    <bean id="productValidator" class="com.packt.webstore.validator.ProductValidator">
+        <property name="springValidators">
+            <set>
+                <ref bean="unitsInStockValidator" />
+                <ref bean="productImageValidator" />
+            </set>
+        </property>
+    </bean>
+
+    <bean id="unitsInStockValidator" class="com.packt.webstore.validator.UnitsInStockValidator" />
+    <bean id="productImageValidator" class="com.packt.webstore.validator.ProductImageValidator">
+        <property name="allowedSize" value="1000000" />
     </bean>
 </beans>

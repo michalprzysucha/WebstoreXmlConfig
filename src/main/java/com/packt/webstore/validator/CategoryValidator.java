@@ -10,11 +10,11 @@ public class CategoryValidator implements ConstraintValidator<Category, String> 
 
     @Override
     public void initialize(Category constraintAnnotation) {
-        allowedCategories = List.of("tablet", "phone", "laptop", "monitor");
+        allowedCategories = List.of("tablet", "smart phone", "laptop", "monitor");
     }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        return allowedCategories.contains(value);
+        return allowedCategories.contains(value.toLowerCase());
     }
 }

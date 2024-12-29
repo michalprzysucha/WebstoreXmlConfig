@@ -13,12 +13,9 @@ public class InMemoryCustomerRepository implements CustomerRepository {
 
     @Override
     public List<Customer> getAllCustomers() {
-        Customer jan = new Customer("C1", "Jan", "Kraków");
-        Customer anna = new Customer("C2", "Anna", "Warszawa");
-        Customer michal = new Customer("C3", "Michal", "Gdańsk");
-        jan.setNoOfOrdersMade(13);
-        anna.setNoOfOrdersMade(21);
-        michal.setNoOfOrdersMade(45);
+        Customer jan = new Customer("C1", "Jan");
+        Customer anna = new Customer("C2", "Anna");
+        Customer michal = new Customer("C3", "Michal");
         customers.addAll(List.of(jan, anna, michal));
         return customers;
     }

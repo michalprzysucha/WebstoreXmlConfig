@@ -30,7 +30,6 @@
                     <div class="caption">
                         <h3>${customer.name}</h3>
                         <p>Adres: ${customer.address}</p>
-                        <p>Liczba złożonych zamówień: ${customer.noOfOrdersMade}</p>
                     </div>
                 </div>
             </div>

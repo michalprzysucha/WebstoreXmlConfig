@@ -1,17 +1,24 @@
 package com.packt.webstore.domain;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Customer {
+public class Customer implements Serializable {
+    private static final long serialVersionUID = 2284040482222162898L;
     private String customerId;
     private String name;
-    private String address;
-    private int noOfOrdersMade;
+    private Address billingAddress;
+    private String phoneNumber;
 
-    public Customer(String customerId, String name, String address) {
+    public Customer() {
+        super();
+        this.billingAddress = new Address();
+    }
+
+    public Customer(String customerId, String name) {
+        this();
         this.customerId = customerId;
         this.name = name;
-        this.address = address;
     }
 
     public String getCustomerId() {
@@ -30,31 +37,31 @@ public class Customer {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
+    public Address getBillingAddress() {
+        return billingAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setBillingAddress(Address billingAddress) {
+        this.billingAddress = billingAddress;
     }
 
-    public int getNoOfOrdersMade() {
-        return noOfOrdersMade;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setNoOfOrdersMade(int noOfOrdersMade) {
-        this.noOfOrdersMade = noOfOrdersMade;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return Objects.equals(customerId, customer.customerId);
+        return Objects.equals(customerId, customer.customerId) && Objects.equals(name, customer.name) && Objects.equals(billingAddress, customer.billingAddress) && Objects.equals(phoneNumber, customer.phoneNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(customerId);
+        return Objects.hash(customerId, name, billingAddress, phoneNumber);
     }
 }

@@ -8,11 +8,13 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
 @XmlRootElement
-public class Product {
+public class Product implements Serializable {
+    private static final long serialVersionUID = 3160529622484210365L;
     @Pattern(regexp = "P[0-9]+", message = "{Pattern.Product.productId.validation}")
     @ProductId
     private String productId;

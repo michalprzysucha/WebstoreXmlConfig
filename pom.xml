@@ -98,6 +98,11 @@
             <version>9.0.0.Beta2</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.webflow</groupId>
+            <artifactId>spring-webflow</artifactId>
+            <version>3.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>
